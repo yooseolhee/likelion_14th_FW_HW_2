@@ -5,3 +5,10 @@ export interface Post {
   content: string;
   author: string;
 }
+
+export interface Comment {
+  id: number;
+  author: string;
+  date : string;
+  content: string;
+}
