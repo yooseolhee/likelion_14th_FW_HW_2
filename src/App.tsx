@@ -25,6 +25,20 @@ function App() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [comment, setComment] = useState('');
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [favorites, setFavorites] = useState<Post[]>([]);
+
+  const selectPost = (post: Post) => {
+    setSelectedPost(post);
+  };
+
+  const toggleFavorite = (post: Post) => {
+    if (favorites.some((f) => f.id === post.id)) {
+      setFavorites(favorites.filter((f) => f.id !== post.id));
+    } else {
+      setFavorites([...favorites, post]);
+    }
+  };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>)=>{
     setContent(e.target.value);
@@ -40,7 +54,7 @@ function App() {
       <div>
       <input
         value={title}
-        onChange={(e) => setTitle(e.target.value)}   // 타입 안 썼는데 잘 됨!
+        onChange={(e) => setTitle(e.target.value)} 
         placeholder="제목을 입력하세요"
       />
       <p>입력 중: {title}</p>
@@ -51,8 +65,17 @@ function App() {
 
 
       <Button label="확인" onClick={() => alert('버튼 클릭테스트!')} />
+      <p>선택한 글: {selectedPost ? selectedPost.title : '없음'}</p>
+      <p>관심 글: {favorites.map((f) => f.title).join(', ') || '없음'}</p>
       {DUMMY.map((post) => (
-        <PostItem key={post.id} post={post} />
+        <PostItem
+          key={post.id}
+          post={post}
+          isSelected={selectedPost?.id === post.id}
+          onSelect={selectPost}
+          isFavorite={favorites.some((f) => f.id === post.id)}
+          onToggleFavorite={toggleFavorite}
+        />
       ))}
       </div>
 
